@@ -9,6 +9,7 @@ This project provides a Python-based client monitor for a WireGuard VPN setup. I
 - [Setup](#setup)
 - [Running the Client Manually](#running-the-client-manually)
 - [Using systemd Service & Timer](#using-systemd-service--timer)
+- [Docker](#docker)
 - [Logging](#logging)
 - [Utilities](#utilities)
 - [Notes](#notes)
@@ -17,7 +18,10 @@ This project provides a Python-based client monitor for a WireGuard VPN setup. I
 
 ```
 wireguard-client/
-├── device.json         # Stores registered device info
+├── .dockerignore       # Files to ignore in Docker builds
+├── docker-compose.yml  # Docker Compose for local development
+├── Dockerfile          # Dockerfile for containerization
+├── entrypoint.sh       # Entrypoint script for Docker container
 ├── README.md
 ├── service-setup.sh    # Script to setup systemd service & timer
 ├── wireguard-setup.sh  # Optional script to setup WireGuard keys & interface
@@ -124,6 +128,34 @@ Reload and restart the timer after edits:
 sudo systemctl daemon-reload
 sudo systemctl restart wg-client.timer
 ```
+
+## Docker
+
+The application can be run inside a Docker container. The provided Docker files are for this purpose.
+
+### Setup
+
+1.  **Pull the Docker image:**
+    ```bash
+    balena pull gituru/wireguard-client:latest
+    ```
+
+2.  **Run the container:**
+    ```bash
+    # balena run -d \
+      --name wireguard-client \
+      --privileged \
+      --network host \
+      -e RELAY_IP=159.69.39.107 \
+      -e RELAY_PORT=8000 \
+      -v wg-data:/app/data \
+      gituru/wireguard-client:latest
+    ```
+
+3.  **Check logs:**
+    ```bash
+    # balena logs wireguard-client
+    ```
 
 ## Logging
 
