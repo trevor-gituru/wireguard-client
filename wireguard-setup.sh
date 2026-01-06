@@ -56,10 +56,12 @@ else
   echo "[+] WireGuard config already exists"
 fi
 
-echo "[+] Enabling WireGuard on boot..."
-systemctl enable "wg-quick@${WG_INTERFACE}"
-
-
+# enable on boot if host supports systemctl
+ARCH=$(uname -m)
+if [ "$ARCH" = "x86_64" ]; then
+    echo "[+] Enabling WireGuard on boot..."
+    systemctl enable "wg-quick@${WG_INTERFACE}"
+fi
 echo "[+] Ensuring CLIENT_PUBLIC_KEY is set in ${ENV_FILE}..."
 
 # Create .env if missing
