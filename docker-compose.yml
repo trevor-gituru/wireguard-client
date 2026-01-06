@@ -1,0 +1,21 @@
+version: '2.1'
+
+services:
+  wireguard-client:
+    container_name: wireguard-client   
+    build: .
+    network_mode: host
+    privileged: true
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - wg-data:/app/data  # container /app/data mapped to volume
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+volumes:
+  wg-data:
