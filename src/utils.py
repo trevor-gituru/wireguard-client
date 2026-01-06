@@ -33,8 +33,9 @@ def get_serial_number() -> str | None:
     try:
         if arch == "aarch64":
             # ARM
-            cmd = ["lshw", "-C", "system"]
-            regex = r"serial:\s*(\w+)"
+            cmd = ["cat", "/proc/cpuinfo"]
+            regex = r"Serial\s*:\s*(\w+)"
+
         elif arch == "x86_64":
             # x86
             cmd = ["dmidecode", "-s", "system-serial-number"]
